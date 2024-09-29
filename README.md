@@ -1,4 +1,17 @@
-# Dioxus v0.6
+Welcome to the Lists Sorting (Drag and Drop) example, created using version 0.6 of the GUI library for Rust, [Dioxus](https://dioxuslabs.com/)!
+
+### Important. This project uses the web platform
+# Quick start
+1. Reinstall the CLI to the git version.
+For Windows users need to install the [Netwide Assembler (NASM)](https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/). On startup it will open the shell and inside execute this command.
+```bash
+cargo install --git https://github.com/dioxuslabs/dioxus dioxus-cli --locked --force
+```
+2. Clone this repository
+```bash
+git clone https://github.com/DioxusGrow/dnd-list-sorting
+```
+and 👇
 
 # Development
 

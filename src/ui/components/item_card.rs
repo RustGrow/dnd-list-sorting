@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-use crate::models::app_state::ApplicationData;
+// use crate::models::app_state::ApplicationData;
 use crate::models::item::Card;
 use crate::ui::components::icons::{ListBuller, TrashOutline};
 use dioxus::prelude::*;

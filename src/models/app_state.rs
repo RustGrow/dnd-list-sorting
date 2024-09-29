@@ -10,8 +10,4 @@ impl ApplicationData {
     pub fn new(board: Signal<Vec<Signal<Vec<Card>>>>) -> Self {
         Self { board }
     }
-
-    // pub fn use_app_data(cx: &ScopeState) -> ApplicationData {
-    //     *use_context(cx).unwrap()
-    // }
 }
