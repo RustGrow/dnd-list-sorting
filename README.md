@@ -1,6 +1,6 @@
 Welcome to the Lists Sorting (Drag and Drop) example, created using version 0.6 of the GUI library for Rust, [Dioxus](https://dioxuslabs.com/)!
 
-![Screenshot (252)](https://github.com/user-attachments/assets/b54a67de-e3dc-4309-93d9-2519f36d9f3c)
+![Screenshot (253)](https://github.com/user-attachments/assets/6cce780a-50e9-43cc-bcdc-999a3c4b019a)
 
 ### Important. This project uses the web platform
 # Quick start
