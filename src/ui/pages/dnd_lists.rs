@@ -11,7 +11,7 @@ pub fn DndLists() -> Element {
     let list_id_incard = use_signal(|| 0 as usize);
 
     rsx! {
-        section { class: "flex flex-row",
+        section { class: "flex flex-row bg-[#0b0423]",
             SideBar {}
             div { class: "flex flex-col items-center w-full",
                 div { class: "text-white h-10", "Hello form lists" }
