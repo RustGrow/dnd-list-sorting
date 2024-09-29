@@ -1,134 +1,127 @@
 #![allow(non_snake_case)]
 use crate::models::app_state::ApplicationData;
-use crate::models::item::ItemCard;
+use crate::models::item::Card;
+use crate::ui::components::icons::{ListBuller, TrashOutline};
 use dioxus::prelude::*;
-use dioxus_signals::*;
+use dioxus_logger::tracing::info;
 
 #[component]
 pub fn ItemCardUi(
-    cx: Scope,
-    card: ItemCard,
+    card: Card,
     id: usize,
     list_id: usize,
     color: &'static str,
-    signal: Signal<Vec<Signal<Vec<ItemCard>>>>,
+    mut lists: Signal<Vec<Signal<Vec<Card>>>>,
     dragStartState: Signal<usize>,
     listIdInCard: Signal<usize>,
 ) -> Element {
-    let firstOver = use_signal(cx, || false);
-    let over = use_signal(cx, || false);
-    let data = ApplicationData::use_app_data(cx);
+    let mut firstOver = use_signal(|| false);
+    let mut over = use_signal(|| false);
+    // let data = use_context::<ApplicationData>();
 
-    render! {
-            li {
-                match id {
-                      0 => render!{
-                        div {
-                          class: "w-full hover:scale-105 transform transition duration-200",
-                          class: if *firstOver.read() {"h-14 bg-slate-600 border-2 border-dashed"} else {"h-8 bg-slate-300"},
-                          prevent_default: "ondragover",
-                          ondragover: move |_| *firstOver.write() = true,
-                          ondragleave: move |_| *firstOver.write() = false,
-                          prevent_default: "ondrop",
-                          ondrop: move |_| {
-                          *firstOver.write() = false;
-                          let cc = *dragStartState.read();
-                          log::info!("DropToID: {id:?} and dragStartStateID {cc}");
-                          // We don't need to change first card
-                          //    if card.board_list_id == *list_id {
-                          if *dragStartState.read() != 0 || *dragStartState.read() == 0 && *listIdInCard.read() != *list_id {
-                          if *listIdInCard.read() == *list_id {
-                          let item = signal
-                            .read()[*listIdInCard.read()]
-                            .write()
-                            .remove(*dragStartState.read());
-                            signal.read()[*list_id].write().insert(*id, item);
-                            } else {
-                          let mut item = signal
-                             .read()[*listIdInCard.read()]
-                             .write()
-                             .remove(*dragStartState.read());
-                             item.board_list_id = *list_id;
-                             signal.read()[*list_id].write().insert(*id, item);
-                             }
-                             }
-
-                             },
-                            "{id}"
-                             }
-
-                             },
-                             _ => None,
-                            },
-                div {
-                    class: "list h-14 text-rose-100 cursor-move flex flex-row items-center justify-between gap-3 opacity-100 {color}",
-                    draggable: "{card.draggable}",
-                    onclick: move |event| {
-                        log::info!("Clicked! Event: {event:?}");
-                    },
-                    ondragstart: move |_| {
-                        *dragStartState.write() = *id;
-                        let cc = *dragStartState.read();
-                        let card_board_list_id = card.board_list_id;
-                        *listIdInCard.write() = card.board_list_id;
-                        log::info!(
-                            "DragStartID! {id:?} StateCardID {cc:?} dragstartListINCARD-{card_board_list_id} dragStartLIST-{list_id}"
-                        );
-                    },
-                    svg { class: "fill-current text-white w-7 ml-2", xmlns: card.svgLeft.xmlns, view_box: card.svgLeft.view_box, path { d: card.svgLeft.path.d } }
-                    "{card.title} {id}"
-                    svg {
-                        class: "fill-current text-white w-7 ml-2 cursor-pointer",
-                        onclick: move |_| {
-                            signal.read()[*list_id].write().remove(*id);
-                        },
-                        xmlns: card.svgRight.xmlns,
-                        view_box: card.svgRight.view_box,
-                        path { d: card.svgRight.path.d }
-                    }
-                }
-                div {
+    rsx! {
+        li {
+            match id {
+                0 => rsx!{
+                    div {
                     class: "w-full hover:scale-105 transform transition duration-200",
-                    class: if *over.read() {
-        "h-14 bg-slate-600 border-2 border-dashed"
-    } else {
-        "h-8 bg-slate-300"
-    },
-                    prevent_default: "ondragover",
-                    ondragover: move |_| *over.write() = true,
-                    ondragleave: move |_| *over.write() = false,
-                    prevent_default: "ondrop",
-                    ondrop: move |_| {
-                        *over.write() = false;
-                        let cc = *dragStartState.read();
-                        log::info!("DropListID-{list_id} DropID: {id:?} dragStartState {cc}");
-                        if *listIdInCard.read() == *list_id {
-                            if *dragStartState.read() == *id {} else {
-                                if *dragStartState.read() < *id {
-                                    let item = signal
-                                        .read()[*list_id]
-                                        .write()
-                                        .remove(*dragStartState.read());
-                                    signal.read()[*list_id].write().insert(*id, item);
-                                } else {
-                                    let item = signal
-                                        .read()[*list_id]
-                                        .write()
-                                        .remove(*dragStartState.read());
-                                    signal.read()[*list_id].write().insert(*id + 1, item);
-                                }
-                            }
+                    class: if *firstOver.read() {"h-14 bg-slate-600 border-2 border-dashed"} else {"h-8 bg-slate-300"},
+
+                    ondragover: move |ev| {
+                        ev.prevent_default();
+                        *firstOver.write() = true},
+                    ondragleave: move |_| *firstOver.write() = false,
+
+                    ondrop: move |ev| {
+                        ev.prevent_default();
+                    *firstOver.write() = false;
+                    let cc = dragStartState();
+                    info!("DropToID: {id:?} and dragStartStateID {cc}");
+                    // We don't need to change first card
+                    //    if card.board_list_id == *list_id {
+                    if dragStartState() != 0 || dragStartState() == 0 && listIdInCard() != list_id {
+                    if listIdInCard() == list_id {
+                    let item = lists()[listIdInCard()]
+                        .write()
+                        .remove(dragStartState());
+                        lists()[list_id].write().insert(id, item);
                         } else {
-                            let mut item = signal
-                                .read()[*listIdInCard.read()]
-                                .write()
-                                .remove(*dragStartState.read());
-                            item.board_list_id = *list_id;
-                            signal.read()[*list_id].write().insert(*id + 1, item);
+                    let mut item = lists()[listIdInCard()]
+                        .write()
+                        .remove(dragStartState());
+                        item.board_list_id = list_id;
+                        lists()[list_id].write().insert(id, item);
                         }
+                        }
+
+                        },
+                        "{id}"
+                        }
+
+                        },
+                _ => rsx!{},
+            },
+            div {
+                class: "list h-14 text-rose-100 cursor-move flex flex-row items-center justify-between gap-3 opacity-100 {color}",
+                draggable: true,
+                onclick: move |event| {
+                    info!("Clicked! Event: {event:?}");
+                },
+                ondragstart: move |_| {
+                    *dragStartState.write() = id;
+                    let cc = dragStartState();
+                    let card_board_list_id = card.board_list_id;
+                    *listIdInCard.write() = card.board_list_id;
+                    info!(
+                        "DragStartID! {id:?} StateCardID {cc:?} dragstartListINCARD-{card_board_list_id} dragStartLIST-{list_id}"
+                    );
+                },
+                div { ListBuller {} }
+                "{card.title} {id}"
+                div {
+                    onclick: move |_| {
+                        lists()[list_id].write().remove(id);
                     },
-                    "{id}"
+                    TrashOutline {}
                 }
             }
+            div {
+                class: "w-full hover:scale-105 transform transition duration-200",
+                class: if *over.read() {
+                    "h-14 bg-slate-600 border-2 border-dashed"
+                } else {
+                    "h-8 bg-slate-300"
+                },
+                ondragover: move |ev| {
+                    ev.prevent_default();
+                    *over.write() = true;
+                },
+                ondragleave: move |_| *over.write() = false,
+                ondrop: move |ev| {
+                    ev.prevent_default();
+                    *over.write() = false;
+                    let cc = *dragStartState.read();
+                    info!("DropListID-{list_id} DropID: {id:?} dragStartState {cc}");
+                    if *listIdInCard.read() == list_id {
+                        if *dragStartState.read() == id {} else {
+                            if *dragStartState.read() < id {
+                                let item = lists()[list_id].write().remove(*dragStartState.read());
+                                lists()[list_id].write().insert(id, item);
+                            } else {
+                                let item = lists()[list_id].write().remove(*dragStartState.read());
+                                lists()[list_id].write().insert(id + 1, item);
+                            }
+                        }
+                    } else {
+                        let mut item = lists()[*listIdInCard.read()]
+                            .write()
+                            .remove(*dragStartState.read());
+                        item.board_list_id = list_id;
+                        lists()[list_id].write().insert(id + 1, item);
+                    }
+                },
+                "{id}"
+            }
         }
+    }
 }

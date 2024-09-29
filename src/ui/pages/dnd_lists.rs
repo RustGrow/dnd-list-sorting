@@ -1,19 +1,18 @@
 #![allow(non_snake_case)]
 use crate::models::app_state::ApplicationData;
 use crate::ui::components::list::*;
-use crate::ui::components::nav_bar::NavBar;
+use crate::ui::components::side_bar::SideBar;
 use dioxus::prelude::*;
-use dioxus_signals::*;
 
 #[component]
-pub fn DndLists(cx: Scope) -> Element {
-    let data = ApplicationData::use_app_data(cx);
-    let current_card = use_signal(cx, || 0 as usize);
-    let list_id_incard = use_signal(cx, || 0 as usize);
+pub fn DndLists() -> Element {
+    let data = use_context::<ApplicationData>();
+    let current_card = use_signal(|| 0 as usize);
+    let list_id_incard = use_signal(|| 0 as usize);
 
-    render! {
+    rsx! {
         section { class: "flex flex-row",
-            NavBar {}
+            SideBar {}
             div { class: "flex flex-col items-center w-full",
                 div { class: "text-white h-10", "Hello form lists" }
                 div { class: "bg-[#0b0423] flex flex-row gap-2",

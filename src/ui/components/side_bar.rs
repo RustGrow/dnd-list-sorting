@@ -1,10 +1,9 @@
 #![allow(non_snake_case)]
 use crate::route::Route;
 use dioxus::prelude::*;
-use dioxus_router::prelude::*;
 
-pub fn NavBar(cx: Scope) -> Element {
-    render! {
+pub fn SideBar() -> Element {
+    rsx! {
         div { class: "w-64 h-screen bg-slate-400",
             div { class: "h-20" }
             ul { class: "",

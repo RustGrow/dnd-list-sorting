@@ -11,7 +11,7 @@ default_platform = "web"
 out_dir = "dist"
 
 # resource (public) file folder
-asset_dir = "public"
+asset_dir = "assets"
 
 [web.app]
 
@@ -24,7 +24,7 @@ title = "Drag and drop with two list"
 reload_html = true
 
 # which files or dirs will be watcher monitoring
-watch_path = ["src", "public"]
+watch_path = ["src", "assets"]
 
 # uncomment line below if using Router
 index_on_404 = true
@@ -33,7 +33,7 @@ index_on_404 = true
 [web.resource]
 
 # CSS style file
-style = ["/tailwind.css"]
+style = []
 
 # Javascript code file
 script = []
@@ -46,4 +46,4 @@ script = []
 style = []
 
 # Javascript code file
-script = []
+script = ["https://cdn.tailwindcss.com"]
