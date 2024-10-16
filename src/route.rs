@@ -3,8 +3,8 @@ use crate::ui::pages::error_page::Err404;
 use crate::ui::pages::home::Home;
 use dioxus::prelude::*;
 
-#[derive(Routable, Clone, Debug, PartialEq)]
 #[rustfmt::skip]
+#[derive(Routable, Clone, Debug, PartialEq)]
 pub enum Route {
     #[route("/")]
     Home {},
